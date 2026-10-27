@@ -11,8 +11,16 @@
 > [《忽略特殊文件》](https://liaoxuefeng.com/books/git/customize/ignore/index.html) —— 廖雪峰，发布于 廖雪峰的官方网站，抓取日期 2026-10-24
 > [《分支管理》](https://liaoxuefeng.com/books/git/branch/index.html) —— 廖雪峰，发布于 廖雪峰的官方网站，抓取日期 2026-10-24
 >
-> 本文操作步骤依据该教程整理；**文中 7 张截图（图 1–图 7）全部来自该教程**，版权归原作者所有。
-> **注意：该教程以 macOS / Linux + GitHub 为主，本课程是 Windows 11 + Gitee**；安装方式、远程平台和部分命令不同，第 2.4 节会列表对比，**一切以本文档为准**。
+> **GitHub 部分参考文献：**
+> [《将新的 SSH 密钥添加到 GitHub 帐户》](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) —— GitHub Docs，发布于 docs.github.com，抓取日期 2026-10-27
+> [《测试 SSH 连接》](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/testing-your-ssh-connection) —— GitHub Docs，发布于 docs.github.com，抓取日期 2026-10-27
+> [《创建新仓库》](https://docs.github.com/zh/repositories/creating-and-managing-repositories/creating-a-new-repository) —— GitHub Docs，发布于 docs.github.com，抓取日期 2026-10-27
+> [《分支》](https://docs.github.com/zh/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches) —— GitHub Docs，发布于 docs.github.com，抓取日期 2026-10-27
+> [《管理个人访问令牌》](https://docs.github.com/zh/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) —— GitHub Docs，发布于 docs.github.com，抓取日期 2026-10-27
+>
+> 本文 Git 操作部分依据廖雪峰教程整理；**文中 7 张截图（图 1–图 7）全部来自该教程**，版权归原作者所有。
+> **注意：该教程以 macOS / Linux + GitHub 为主，本课程主线是 Windows 11 + Gitee**；安装方式、远程平台和部分命令不同，第 2.4 节会列表对比，**一切以本文档为准**。第 12 节补充 GitHub 的完整操作，作为选做拓展。
+> 第 12 节依据上述 GitHub Docs 条目整理，抓取日期 2026-10-27；该节未使用文档中的截图，只保留 2 处待补占位。
 
 ---
 
@@ -25,7 +33,7 @@
 - 配置 `user.name` 和 `user.email`，创建仓库，完成 `git add` → `git commit` 流程，会用 `git status`、`git diff`、`git log`；
 - 用 `git reset`、`git reflog`、`git restore` 回退版本、撤销修改、找回误删的内容；
 - 用 `.gitignore` 把 `build/`、`*.exe` 这类编译产物挡在仓库外；
-- 在 **Gitee** 上创建远程仓库，用 SSH Key 完成 `git push` 和 `git clone`。
+- 在 **Gitee** 上创建远程仓库，用 SSH Key 完成 `git push` 和 `git clone`；**（选做）**再把同一仓库推送到 **GitHub**，分清 `origin` 和 `github` 两个远程名，并理解 GitHub 的 `main` 与本地 `master` 的差异。
 
 > [!IMPORTANT]
 > 本周不是"学一门新语言"，而是**给你的代码装一台时光机**。
@@ -41,8 +49,9 @@
 | 第一周装好的 VS Code | 第一周已经装好，直接沿用 | — |
 | **Git for Windows 安装包（.exe）** | 官网下载（本文第 3 节） | 约 **64 MB** |
 | 一个 **Gitee 账号** | [gitee.com](https://gitee.com) 注册（本文第 11 节） | 免费，需手机号 |
+| 一个 **GitHub 账号**（选做） | [github.com](https://github.com) 注册（本文第 12 节） | 免费；国内访问可能不稳定 |
 | 一个纯英文、无空格的练习目录 | 自己建，如 `D:\Code\git-demo` | — |
-| 联网 | 下载安装包、注册 Gitee、推送代码时要用 | — |
+| 联网 | 下载安装包、注册 Gitee / GitHub、推送代码时要用 | — |
 
 > [!WARNING]
 > **项目路径里不要出现中文和空格。**
@@ -142,15 +151,15 @@ Windows 上你会遇到三种命令行窗口。**Git 命令在三种里完全一
 
 ### 2.4 参考文献的环境 vs 本课程的环境
 
-参考文献是一套很完整的 Git 教程，但它主要面向 **macOS / Linux + GitHub**。本课程是 **Windows 11 + Gitee**。差异如下，**以本文档为准**：
+参考文献是一套很完整的 Git 教程，但它主要面向 **macOS / Linux + GitHub**。本课程主线是 **Windows 11 + Gitee**（第 12 节补充 GitHub 选做）。差异如下，**以本文档为准**：
 
 | 对比项 | 参考文献的做法 | **本课程的实际做法** |
 | --- | --- | --- |
 | 操作系统 | macOS / Linux | Windows 11 |
 | 安装方式 | 官网安装程序，或 `brew` / `apt` / `scoop` 包管理器 | 下载 **Git for Windows 安装包**，双击安装 |
-| 远程平台 | GitHub | **Gitee**（国内访问稳定，界面中文） |
-| 认证方式 | SSH Key | **SSH Key**（操作相同，公钥添加到 Gitee） |
-| 默认分支 | `master` | `master`（Git 2.x 的默认值） |
+| 远程平台 | GitHub | **Gitee**（主线，国内访问稳定，界面中文）；GitHub 见第 12 节（选做） |
+| 认证方式 | SSH Key | **SSH Key**（同一把公钥可同时添加到 Gitee 和 GitHub） |
+| 默认分支 | `master` | `master`（Git 2.x 的默认值）；GitHub 新仓库默认 `main`（见第 12.7 节） |
 | 撤销修改 | `git checkout -- <file>` | **`git restore <file>`**（旧写法仍然可用） |
 | 取消暂存 | `git reset HEAD <file>` | **`git restore --staged <file>`**（旧写法仍然可用） |
 | 截图界面 | macOS / GitHub 旧界面 | Windows / Gitee；参考图会注明差别 |
@@ -158,6 +167,7 @@ Windows 上你会遇到三种命令行窗口。**Git 命令在三种里完全一
 > [!IMPORTANT]
 > **以本文档（Windows 11 + Gitee + Git 2.56）为准，参考文献仅供参考。**
 > Git 的核心命令是跨平台通用的，差别主要在**安装步骤、远程平台、界面文字**。你在网上看到用 `git checkout --`、`git reset HEAD` 的教程，不算错，只是旧写法；本文会给出对照表。
+> 第 11 节按 **Gitee** 讲，第 12 节补充 **GitHub**；两者的 Git 命令完全相同，只是远程地址、SSH 公钥页面、默认分支名和网络环境不同。
 
 ### 2.5 本周核对到的版本信息
 
@@ -165,6 +175,7 @@ Windows 上你会遇到三种命令行窗口。**Git 命令在三种里完全一
 > 本文更新时（2026-10-24），Git for Windows 最新稳定版是 **2.56.0(3)**，安装包文件名 **`Git-2.56.0.3-64-bit.exe`**，约 **64 MB**，发布于 2026-10-22。
 > **你下载时版本号可能更高**，安装界面和命令基本一致；只要版本 ≥ 2.40，本文所有命令都能用。
 > 不要下载 `-rc` 结尾的候选版。
+> GitHub 操作路径依据官方文档核对于 **2026-10-27**，见第 12 节。
 
 ---
 
@@ -291,7 +302,7 @@ C:\Program Files\Git\cmd\git.exe
 > [!TIP]
 > 三条验证都通过，说明 Git 装好了：
 > `git --version` 有版本输出、`where.exe git` 指向 `C:\Program Files\Git\cmd\git.exe`、Git Bash 能打开。
-> 如果 `git` 提示"不是内部或外部命令"，先看第 13 节 FAQ 第 1 条。
+> 如果 `git` 提示"不是内部或外部命令"，先看第 14 节 FAQ 第 1 条。
 
 ---
 
@@ -453,7 +464,7 @@ git add readme.txt
 
 > [!NOTE]
 > 如果你看到 `warning: LF will be replaced by CRLF the next time Git touches it`，**这不是错误**。
-> 这是 Windows 换行符转换提示：Git 内部存 LF，检出到 Windows 时转成 CRLF。详见第 13 节 FAQ 第 6 条。
+> 这是 Windows 换行符转换提示：Git 内部存 LF，检出到 Windows 时转成 CRLF。详见第 14 节 FAQ 第 6 条。
 
 ### 6.2 查看暂存区状态
 
@@ -990,9 +1001,9 @@ git commit -m "add gitignore"
 | 界面语言 | 英文为主 | 中文 |
 
 > [!IMPORTANT]
-> **以本文档的 Gitee 路线为准。**
-> 如果你以后要用 GitHub，Git 命令完全一样，只需要把远程地址从 `gitee.com` 换成 `github.com`，并把公钥添加到 GitHub。
-> 注意 GitHub 新仓库的默认分支可能叫 `main`，而本地 `git init` 默认是 `master`；这种情况可以先执行 `git branch -M main`，再 `git push -u origin main`。
+> **课程作业以第 11 节的 Gitee 路线为准；GitHub 放在第 12 节，作为选做拓展。**
+> 两者的 Git 命令完全一样，差别只有远程地址、SSH 公钥页面、默认分支名（GitHub 新仓库默认 `main`）和网络环境。
+> 如果以后要用 GitHub，**不需要重新生成 SSH Key**——同一把公钥可以同时添加到 Gitee 和 GitHub。
 
 ### 11.2 注册并准备 Gitee 账号
 
@@ -1115,7 +1126,7 @@ Hi 你的用户名! You've successfully authenticated, but GITEE.COM does not pr
 
 > [!IMPORTANT]
 > 第一次必须输入完整的 `yes`，不能只输 `y`。
-> 如果提示 `Permission denied (publickey)`，说明公钥没添加成功、加到了别的账号，或者你用的不是刚才那把钥匙。先看第 13 节 FAQ 第 7 条。
+> 如果提示 `Permission denied (publickey)`，说明公钥没添加成功、加到了别的账号，或者你用的不是刚才那把钥匙。先看第 14 节 FAQ 第 7 条。
 
 ### 11.5 在 Gitee 上新建一个空仓库
 
@@ -1288,7 +1299,311 @@ git push -u origin master
 
 ---
 
-## 12. 选做：分支
+## 12. 拓展：把代码托管到 GitHub（选做）
+
+> [!NOTE]
+> 本节是**选做**，不影响课程作业验收。课程主线仍然是第 11 节的 Gitee——国内访问稳定，交作业更省事。
+> 但 GitHub 是全球使用最广的代码托管平台，以后看开源项目、找实习、做毕设都绕不开它。Git 命令和前面完全一样，本节只讲**不一样的地方**：注册账号、添加 SSH 公钥、创建仓库、处理 `main` / `master` 分支名，以及网络不通时怎么办。
+> GitHub 的界面会不时调整，本文操作路径依据 **2026-10-27** 的 GitHub 官方文档整理；按钮文字略有差异时，按含义找对应项即可。
+
+### 12.1 GitHub 与 Gitee 的差异
+
+| 对比项 | Gitee（第 11 节，课程主线） | GitHub（本节，选做） |
+| --- | --- | --- |
+| 网址 | `gitee.com` | `github.com` |
+| 国内访问 | 一般稳定 | **不稳定**，可能需要换网络（校园网、手机热点） |
+| 界面语言 | 中文 | 英文为主 |
+| 仓库地址 | `git@gitee.com:你的空间地址/learngit.git` | `git@github.com:你的用户名/learngit.git` |
+| 添加 SSH 公钥 | 设置 → SSH 公钥 | Settings → SSH and GPG keys |
+| 新仓库默认分支 | 常见 `master` | **`main`** |
+| 私有仓库 | 免费账号可用 | 免费账号可建私有仓库；协作者人数上限以官网为准 |
+| HTTPS 推送认证 | 账号密码或私人令牌 | **不能用账号密码，必须用个人访问令牌（PAT）** |
+
+> [!IMPORTANT]
+> **同一台电脑的同一对 SSH Key，可以同时添加到 Gitee 和 GitHub，不需要重新生成。**
+> `id_rsa.pub` 是公钥，相当于一把锁，可以交给多个平台；`id_rsa` 是私钥，永远只留在你自己电脑上。
+> 所以 12.3 节不需要再执行一次 `ssh-keygen`，直接复制第 11.3 节生成的 `id_rsa.pub` 即可。
+
+> [!TIP]
+> 本节主线用 **SSH**，不需要个人访问令牌（PAT）；PAT 只在 12.8 的 HTTPS 备用方案里用到。
+
+### 12.2 注册 GitHub 账号（已有账号可跳过）
+
+1. 打开 [https://github.com/signup](https://github.com/signup)。
+2. 按提示填写**邮箱、密码、用户名**。用户名会出现在仓库地址里（例如 `github.com/你的用户名/learngit`），建议用**英文 + 数字 + 连字符**，不要用中文，也不要用学号、手机号或身份证号；注册后虽然可以改，但旧地址会受影响，尽量一次想好。
+3. 完成邮箱验证。**没有验证邮箱，GitHub 不允许创建仓库。**
+4. 免费计划（Free）就够用，不需要绑定付款方式。
+
+> [!TIP]
+> 验证邮件可能在垃圾邮件箱里；找不到就等几分钟，或在注册页面点重新发送。
+
+> [!WARNING]
+> GitHub 在中国大陆的访问**不稳定**，注册页打不开、验证邮件收不到都很常见。
+> 可以换手机热点、校园网或稍后再试；**不要**把账号密码交给"GitHub 加速站""代注册"之类的第三方网站。
+
+> [!TIP]
+> 如果只是跟课程进度，**不注册 GitHub 也完全不影响**；先把第 11 节的 Gitee 走通，以后需要时再回来做本节。
+
+### 12.3 把 SSH 公钥添加到 GitHub
+
+1. 先确认第 11.3 节生成的公钥还在。在 Git Bash 里执行：
+
+```bash
+cat ~/.ssh/id_rsa.pub
+```
+
+PowerShell 里执行：
+
+```powershell
+Get-Content $env:USERPROFILE\.ssh\id_rsa.pub
+```
+
+输出应该是一整行，以 `ssh-rsa` 开头。把这一整行复制到剪贴板：
+
+Git Bash：
+
+```bash
+clip < ~/.ssh/id_rsa.pub
+```
+
+PowerShell：
+
+```powershell
+Get-Content $env:USERPROFILE\.ssh\id_rsa.pub | Set-Clipboard
+```
+
+> [!TIP]
+> 如果你跳过了第 11 节、还没生成过 SSH Key，先回到第 11.3 节执行 `ssh-keygen -t rsa -b 4096 -C "你的邮箱"`，三个提示都直接回车，再回到这里。
+
+2. 登录 GitHub，点击右上角头像 → **Settings**。
+3. 在左侧栏的 **Access** 分组里，点击 **SSH and GPG keys**。
+4. 点击 **New SSH key**（有的界面显示 **Add SSH key**）。
+5. 填写：
+   - **Title**：给这台电脑起个名字，例如 `我的笔记本`；
+   - **Key type**：如果页面有这个选项，选 **Authentication Key**（用于推送、拉取；不要选 **Signing Key**，那是给提交签名用的）；
+   - **Key**：粘贴刚才复制的**公钥**，不要加换行或空格。
+6. 点击 **Add SSH key**。如果弹出确认窗口，按提示输入 GitHub 密码或完成双重验证。
+7. 页面上出现这把公钥，说明添加成功。
+
+> 📷 **截图待补充**：GitHub 的「Settings → SSH and GPG keys → New SSH key」页面，填写 Title、Key type、Key 的样子（公钥请打码）。
+
+8. 回到终端，测试连接：
+
+```bash
+ssh -T git@github.com
+```
+
+第一次连接会提示主机指纹，确认提示里的主机是 `github.com` 后，输入完整的 **`yes`** 并回车。看到下面的输出，就说明认证成功：
+
+```text
+Hi 你的用户名! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+> [!IMPORTANT]
+> **只粘贴 `id_rsa.pub`（公钥），不要粘贴 `id_rsa`（私钥）。**
+> 私钥泄露后，别人可以冒充你向 GitHub 推送代码。如果不小心传了私钥：立刻在 GitHub 删除对应公钥，并重新生成一对新密钥。
+
+> [!NOTE]
+> `does not provide shell access` 的意思是"GitHub 只提供 Git 服务，不提供登录服务器执行命令的 Shell"。**这是正常的成功提示，不是错误。**
+> 这条命令的退出码可能是 1，不用管，只要看到 `successfully authenticated` 就行。
+
+> [!TIP]
+> 如果 `ssh -T git@github.com` 提示 `Permission denied (publickey)`，先确认 GitHub 的 **SSH and GPG keys** 列表里有这把公钥、**Key type** 选的是 **Authentication Key**，再看第 14 节 FAQ 第 7 条。
+
+### 12.4 在 GitHub 新建一个空仓库
+
+1. 登录 GitHub，点击右上角的 **`+`** → **New repository**。
+2. 填写：
+
+| 字段 | 填什么 |
+| --- | --- |
+| **Owner** | 你的账号 |
+| **Repository name** | `learngit`（如果提示已存在，改成 `learngit-你的学号`） |
+| **Description** | 可不填 |
+| **Visibility** | 练习选 **Private** |
+| **Add a README file** | **不要勾选** |
+| **Add .gitignore** | **不要勾选** |
+| **Choose a license** | **不要勾选** |
+
+3. 点击 **Create repository**。
+4. 在新仓库页面的 **Quick setup** 区域，点击 **SSH**，复制形如下面的地址：
+
+```text
+git@github.com:你的用户名/learngit.git
+```
+
+> [!IMPORTANT]
+> **`Add a README file`、`Add .gitignore`、`Choose a license` 三个都不要勾。**
+> 它们的作用和 Gitee 的「初始化仓库」一样：会在远程仓库里自动生成一个提交，导致你本地第一次 `git push` 被拒绝。
+> 如果已经勾了：删掉这个远程仓库，重新建一个**空仓库**。
+
+> 📷 **截图待补充**：GitHub 的「New repository」页面，仓库名为 `learngit`、Visibility 选 Private、三个初始化选项都不勾的样子。
+
+> [!WARNING]
+> **不要照抄本文档里的 `你的用户名` 和 `learngit`。** 一定从你自己的仓库页面复制 **SSH** 地址；GitHub 的用户名不一定等于你的显示昵称，仓库名也可能和你填的不同。
+
+### 12.5 把本地仓库推送到 GitHub
+
+这里要分两种情况。**如果你已经按第 11 节把仓库推送到 Gitee，你的 `origin` 已经指向 Gitee**，不能再把 GitHub 也叫 `origin`；给它起第二个名字，例如 `github`。
+
+#### 情况 A：仓库已经推送过 Gitee（课程主线走完后就是这种情况）
+
+1. 进入本地仓库：
+
+```powershell
+cd D:\Code\git-demo\learngit
+```
+
+2. 添加一个名为 `github` 的远程仓库：
+
+```powershell
+git remote add github git@github.com:你的用户名/learngit.git
+git remote -v
+```
+
+`git remote -v` 现在应该显示**两组**地址：
+
+```text
+origin  git@gitee.com:你的空间地址/learngit.git (fetch)
+origin  git@gitee.com:你的空间地址/learngit.git (push)
+github  git@github.com:你的用户名/learngit.git (fetch)
+github  git@github.com:你的用户名/learngit.git (push)
+```
+
+- `origin`：Gitee，第 11 节起的名字；
+- `github`：GitHub，本节新起的名字。**远程仓库的名字只是代号，叫什么都行，但同一仓库内不能重名。**
+
+3. 第一次推送到 GitHub：
+
+```powershell
+git push github master
+```
+
+应该看到：
+
+```text
+Enumerating objects: ...
+To github.com:你的用户名/learngit.git
+ * [new branch]      master -> master
+```
+
+4. 刷新 GitHub 仓库页面，应该能看到 `readme.txt` 和你的提交记录。
+
+> [!NOTE]
+> **这里没有加 `-u`，是有意的。**
+> `-u` 会把"默认推送目标"改成 GitHub，之后你直接敲 `git push` 会推到 GitHub，而不再是 Gitee，容易和课程作业混淆。
+> 加了第二个远程仓库后，建议每次写清楚：`git push github master` 推 GitHub，`git push origin master` 推 Gitee。
+
+> [!WARNING]
+> 如果提示 `fatal: remote github already exists`，说明之前已经加过同名远程仓库。先 `git remote -v` 查看；地址不对就执行 `git remote remove github`，再重新 `git remote add github ...`。
+
+#### 情况 B：全新仓库，只推 GitHub
+
+如果你的仓库还没有关联任何远程仓库：
+
+```powershell
+cd D:\Code\git-demo\learngit
+git remote add origin git@github.com:你的用户名/learngit.git
+git push -u origin master
+```
+
+这里的 `origin` 就是 GitHub，`-u` 会把本地 `master` 和 GitHub 的 `master` 关联起来，以后直接 `git push` 即可。
+
+> [!TIP]
+> 不确定当前仓库有哪些远程地址？执行 `git remote -v`。没有输出，说明还没关联任何远程仓库。
+
+### 12.6 从 GitHub 克隆
+
+和 Gitee 完全一样，只是地址换成 GitHub：
+
+```powershell
+cd D:\Code
+git clone git@github.com:你的用户名/learngit.git learngit-github
+cd learngit-github
+git log --oneline
+```
+
+克隆出来的目录里，Git 会自动把 GitHub 命名为 `origin`，所以在这个目录里直接 `git push` / `git pull` 都是对 GitHub 操作。
+
+修改文件、提交并推送：
+
+```powershell
+git add readme.txt
+git commit -m "update from github clone"
+git push
+```
+
+回到原来的 `learngit` 目录，从 GitHub 拉取：
+
+```powershell
+cd D:\Code\git-demo\learngit
+git pull github master
+```
+
+> [!NOTE]
+> 上面用的是情况 A 的远程名 `github`；如果你是情况 B（GitHub 就是 `origin`），执行 `git pull origin master`。
+> 在情况 A 下，原仓库的 `git pull` 默认还是从 Gitee（`origin`）拉取；要从 GitHub 拉，必须写 `git pull github master`。拉下来以后，如果想把这次修改也同步到 Gitee，再执行 `git push origin master`。
+
+> [!TIP]
+> 克隆时如果 `learngit-github` 文件夹已经存在且**不为空**，Git 会报错。换一个不存在的文件夹名，或者先清空目标文件夹。
+
+### 12.7 分支名：GitHub 的 `main` 和本地的 `master`
+
+GitHub 从 2020 年起把新仓库的默认分支名定为 **`main`**；而本课程 `git init` 出来的本地分支是 **`master`**。这不影响推送，但两边名字不一致时容易看懵。
+
+两种处理方式：
+
+| 做法 | 命令 | 适用情况 |
+| --- | --- | --- |
+| **保持 `master`** | 直接 `git push github master`（情况 B 用 `git push origin master`） | 已经和 Gitee 同步，或不想折腾分支名；**本课程推荐** |
+| **改成 `main`** | `git branch -M main`，再 `git push -u origin main` | **只在仓库还没推送过任何远程时使用**；想和 GitHub 惯例一致 |
+
+> [!IMPORTANT]
+> **已经推到 Gitee 的仓库，不要随便把本地 `master` 改名成 `main`。**
+> 改名只改本地分支，Gitee 上仍然是 `master`，两边分支名就对不上了；以后 `git push origin master` 会提示找不到分支。
+> 想两边都改，需要分别在两个平台修改默认分支，零基础阶段不建议折腾。
+
+> [!NOTE]
+> 如果 GitHub 页面显示的分支名和你推送时写的不一样，去 **Settings → Branches** 检查默认分支。
+> 空仓库第一次推送时，GitHub 会把**第一个推上去的分支**设为默认分支；所以按"情况 A"推 `master`，页面就会显示 `master`。
+
+### 12.8 GitHub 访问慢、SSH 22 端口不通怎么办
+
+1. **网页打不开 / 很慢**：换网络（手机热点、校园网）、稍后再试；只访问 `github.com`，不要用来源不明的"加速站"登录账号。
+2. **`ssh: connect to host github.com port 22: Connection timed out`**：网络封了 22 端口。可以让 SSH 走 443 端口：在 `C:\Users\你的用户名\.ssh\config` 新建一个名为 `config` 的文件（**没有扩展名**），写入：
+
+```text
+Host github.com
+    HostName ssh.github.com
+    Port 443
+    User git
+```
+
+保存后再执行 `ssh -T git@github.com`。如果仍然不通，改用下面的 HTTPS 方式。
+
+3. **改用 HTTPS**：
+
+```powershell
+git remote set-url github https://github.com/你的用户名/learngit.git
+git push github master
+```
+
+> 如果你的 GitHub 远程名是 `origin`（情况 B：全新仓库只推 GitHub），把命令里的 `github` 换成 `origin`。
+
+第一次推送时，如果命令行要求输入用户名和密码（或者弹出 Git Credential Manager 窗口），用户名填 GitHub 用户名；**密码位置不能填账号密码**——GitHub 的 HTTPS 已不接受密码认证，要填**个人访问令牌（Personal Access Token，PAT）**。如果弹出的是浏览器授权窗口，按提示登录并授权即可。
+
+生成 PAT 的路径：GitHub 头像 → **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)** → **Generate new token (classic)**，勾选 **`repo`** 权限，生成后**只显示一次**，立刻复制保存。
+
+> [!WARNING]
+> **PAT 等于密码，不要写进代码、配置文件或聊天记录，更不要提交到仓库。**
+> 如果令牌泄露，立刻到 GitHub 删除并重新生成；更安全的做法是继续用 SSH，而不是把令牌存到文件里。
+
+> [!TIP]
+> 如果只是**克隆公开仓库**，用 HTTPS 不需要令牌；只有**推送**或访问**私有仓库**时才需要认证。
+
+---
+
+## 13. 选做：分支
 
 > [!NOTE]
 > 本节是**选做**，不做也不影响本周作业。分支是 Git 的核心功能之一，建议至少跟着走一遍，知道它是什么。
@@ -1380,7 +1695,7 @@ git log --oneline --graph --all
 
 ---
 
-## 13. 常见问题（FAQ）
+## 14. 常见问题（FAQ）
 
 ### 1. 现象：终端提示 `'git' 不是内部或外部命令，也不是可运行的程序或批处理文件`
 
@@ -1463,17 +1778,18 @@ git config --global --list
 
 ---
 
-### 7. 现象：`git push` 或 `ssh -T git@gitee.com` 报 `Permission denied (publickey)`
+### 7. 现象：`git push` 或 `ssh -T` 报 `Permission denied (publickey)`
 
-**原因**：Gitee 上没有你的公钥、公钥加到了别的账号，或者你用的不是对应的私钥。
+**原因**：平台上没有你的公钥、公钥加到了别的账号，或者你用的不是对应的私钥。
 
 **解决**：
 
-1. 执行 `ssh -T git@gitee.com`，看是否仍然被拒；
-2. 登录 Gitee → **设置 → SSH 公钥**，确认列表里有你刚才添加的公钥；
+1. 先判断是哪个平台：Gitee 执行 `ssh -T git@gitee.com`，GitHub 执行 `ssh -T git@github.com`，看哪个仍然被拒；
+2. 登录对应平台确认公钥在列表里：Gitee → **设置 → SSH 公钥**；GitHub → **Settings → SSH and GPG keys**；
 3. 确认复制的是 **`id_rsa.pub`**（公钥，以 `ssh-rsa` 开头），不是 `id_rsa`（私钥）；
-4. 确认 Gitee 账号和你要推送的仓库属于同一个账号；
-5. 如果你生成过多把钥匙，先确认 Gitee 上加的是**当前默认密钥** `id_rsa.pub` 的内容；不确定就重新生成一对，把新的 `.pub` 加到 Gitee。
+4. GitHub 还要确认 **Key type** 选的是 **Authentication Key**，不是 **Signing Key**；
+5. 确认平台账号和你要推送的仓库属于同一个账号；
+6. 如果你生成过多把钥匙，先确认平台上加的是**当前默认密钥** `id_rsa.pub` 的内容；不确定就重新生成一对，把新的 `.pub` 加到对应平台。
 
 ---
 
@@ -1500,21 +1816,27 @@ git remote add origin git@gitee.com:你的空间地址/learngit.git
 git remote set-url origin git@gitee.com:你的空间地址/learngit.git
 ```
 
+> [!NOTE]
+> 如果你是在给 GitHub 配置远程仓库，把上面的 `gitee.com:你的空间地址` 换成 `github.com:你的用户名`。
+
 ---
 
 ### 9. 现象：`git push` 报 `! [rejected] master -> master (fetch first)` 或 `failed to push some refs`
 
-**原因**：远程仓库里有你本地没有的提交。最常见的原因是：在 Gitee 新建仓库时勾选了 **初始化仓库**，自动生成了 README。
+**原因**：远程仓库里有你本地没有的提交。Gitee 最常见的原因是新建仓库时勾选了 **初始化仓库**；GitHub 最常见的原因是勾选了 **Add a README file**、**Add .gitignore** 或 **Choose a license**，自动生成了提交。
 
 **解决**（初学者推荐第 1 种）：
 
-1. 删掉 Gitee 上的这个仓库，重新建一个**空仓库**，所有初始化选项都不勾；然后重新 `git remote add` + `git push -u origin master`；
+1. 删掉远程仓库，重新建一个**空仓库**，所有初始化选项都不勾；然后重新 `git remote add` + `git push -u origin master`；
 2. 或者先把远程内容拉下来再推：
 
 ```powershell
 git pull --rebase origin master
 git push -u origin master
 ```
+
+> [!NOTE]
+> GitHub 新仓库的默认分支如果是 `main`，把上面命令里的 `master` 换成 `main`；如果你给 GitHub 起的远程名是 `github`，把 `origin` 换成 `github`。
 
 > [!WARNING]
 > 不要在不了解后果的情况下使用 `git push -f`（强制推送），它会覆盖远程历史，可能让别人丢失提交。
@@ -1531,6 +1853,9 @@ git push -u origin master
 2. `git branch` 看当前分支名；
 3. 推送**实际存在的分支**：如果叫 `main`，就执行 `git push -u origin main`；
 4. 或者把分支改名为 `master`：`git branch -M master`，再推送。
+
+> [!NOTE]
+> GitHub 新仓库的默认分支是 `main`；本地是 `master` 时，可以直接 `git push -u origin master`（GitHub 会接受，并把第一个推上去的分支设为默认分支），也可以先 `git branch -M main` 再推 `main`。详见第 12.7 节。
 
 ---
 
@@ -1559,6 +1884,9 @@ git push -u origin master
 
 按提示输入 Gitee 用户名和密码；如果开了双因素认证，密码处填 **私人令牌**。
 
+> [!NOTE]
+> GitHub 同样可能封 SSH 的 22 端口。GitHub 可以让 SSH 走 443 端口（见第 12.8 节第 2 条），也可以改用 HTTPS + PAT。
+
 ---
 
 ### 13. 现象：`git log` 底部出现一个 `:`，按回车只往下滚，退不出去
@@ -1572,7 +1900,21 @@ git push -u origin master
 
 ---
 
-## 14. 课后作业
+### 14. 现象：向 GitHub 推送时提示 `Support for password authentication was removed on August 13, 2021`
+
+**原因**：你用的是 HTTPS 地址，并且在密码处输入了 GitHub 登录密码。GitHub 已经不再接受账号密码认证。
+
+**解决**：二选一：
+
+1. **改用 SSH（推荐）**：按第 12.3–12.5 节把公钥添加到 GitHub，并把远程地址改成 `git@github.com:你的用户名/learngit.git`；
+2. **继续用 HTTPS**：密码处填 **个人访问令牌（PAT）**，不是账号密码；生成方法见第 12.8 节第 3 条。
+
+> [!WARNING]
+> 不要把 GitHub 账号密码拼进远程地址（例如 `https://用户名:密码@github.com/...`），这样密码会以明文形式留在 `.git/config` 和命令历史里。
+
+---
+
+## 15. 课后作业
 
 > 以下作业都要**交截图**，截图里要能看出是你自己做的。**截图里不要出现密码、私钥、令牌**；邮箱如果不想公开，可以打码。
 
@@ -1606,6 +1948,8 @@ git push -u origin master
 - 回到原仓库执行 `git pull`，提交终端截图，证明两边同步；
 - 用一句话回答：`git clone` 和 `git pull` 有什么区别？
 
+> **选做拓展**：如果你有可用的 GitHub 账号，按第 12 节把同一个仓库再推一份到 GitHub，并提交 GitHub 仓库页面的截图。此项不计入必做要求。
+
 **第 4 题（选做）**：分支练习。
 
 要求：
@@ -1617,7 +1961,7 @@ git push -u origin master
 
 ---
 
-## 15. 自检清单
+## 16. 自检清单
 
 做完之后，逐条打勾。有任何一条打不上，回到对应章节重做。
 
@@ -1640,6 +1984,9 @@ git push -u origin master
 - [ ] `ssh -T git@gitee.com` 返回 `successfully authenticated`
 - [ ] 我在 Gitee 建了**空仓库**，并成功 `git push -u origin master`
 - [ ] 我把仓库 `git clone` 到了另一个目录，并能 `git pull` 同步
+- [ ] （选做）我把**同一把** SSH 公钥添加到了 GitHub，`ssh -T git@github.com` 返回 `successfully authenticated`
+- [ ] （选做）我在 GitHub 建了**空仓库**，用 `git push github master` 推送成功，分得清 `origin`（Gitee）和 `github`（GitHub）
+- [ ] （选做）我知道 GitHub 新仓库默认分支是 `main`，本地是 `master` 时可以直接推 `master`，也可以 `git branch -M main`
 - [ ] 我没有把私钥、密码、令牌提交到仓库，也没有发到群里
 - [ ] （选做）我创建、合并并删除了一个 `dev` 分支
 
@@ -1666,4 +2013,4 @@ git push -u origin master
 - 图 2 是 **macOS** 的 Finder 窗口，Windows 下对应的是资源管理器，文件夹结构一致即可。
 - 图 6 中 Gitee 账号为教程作者，公钥内容已由助教用灰色色块遮盖；**你的页面会显示你自己的账号和公钥**。
 - 图 7 中仓库名显示为 `learngit1`，是因为教程作者的 `learngit` 已被占用；你填自己的仓库名即可。图中演示选的是「开源」，你练习时建议选「私有」。图中的「初始化仓库」等选项**不要勾选**。
-- 本文仍有 **2 处截图待补充**（安装向导的 PATH 页面、Gitee 推送成功后的仓库页面），见正文中的 📷 占位提示；补充后会按 `instruct.md` §4.2.1 的流程接入编号。
+- 第 12 节 GitHub 部分暂无定稿截图，不占用图号。连同前面的 2 处，本文共有 **4 处截图待补充**（安装向导的 PATH 页面、Gitee 推送成功后的仓库页面、GitHub 的 SSH 公钥页面、GitHub 新建仓库页面），见正文中的 📷 占位提示；补充后会按 `instruct.md` §4.2.1 的流程接入编号。

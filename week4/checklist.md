@@ -63,3 +63,13 @@
 |---|---|---|---|
 | 29 | 执行 `git switch -c dev` → 修改 `readme.txt` 加一行 → `git add readme.txt` → `git commit -m "add feature on dev"` | 输出 `Switched to a new branch 'dev'`；提交成功 | 工作区有未提交修改时直接切换分支；分支名拼错 |
 | 30 | 执行 `git switch master` → `git merge dev` → `git branch -d dev` → `git log --oneline --graph --all` | 输出 `Fast-forward`；`dev` 被删除；分支图显示 `add feature on dev` 在 `master` 上 | 在 `dev` 上直接 `git branch -D dev` 删除还没合并的分支；切换分支前不处理未提交修改 |
+
+## G. 选做：GitHub
+
+| # | 操作 | 结果 | 避免 |
+|---|---|---|---|
+| 31 | 登录 <https://github.com> → 头像 → **Settings** → **SSH and GPG keys** → **New SSH key** → Title 填 `我的笔记本` → **Key type** 选 **Authentication Key** → 粘贴第 11.3 节生成的 `id_rsa.pub` → **Add SSH key** | 公钥列表里出现刚添加的公钥（正文第 12.3 节有截图占位） | 粘贴 `id_rsa`（私钥）；Key type 选成 **Signing Key**；公钥里多出换行或空格 |
+| 32 | 执行 `ssh -T git@github.com` → 第一次提示时输入完整的 `yes` 并回车 | 显示 `Hi 你的用户名! You've successfully authenticated, but GitHub does not provide shell access.` | 只输入 `y`；把 `does not provide shell access` 当成失败；把地址写成 `gitee.com` |
+| 33 | GitHub 右上角 **+** → **New repository** → 仓库名 `learngit` → 选 **Private** → **不要勾选** Add a README file / Add .gitignore / Choose a license → **Create repository** → 在 Quick setup 区域点 **SSH**，复制地址 | 创建成功，仓库是空的；复制到形如 `git@github.com:你的用户名/learngit.git` 的地址（正文第 12.4 节有截图占位） | 勾选任何初始化选项，远程多出提交；照抄文档里的 `你的用户名` |
+| 34 | 回到本地 `learngit` → 执行 `git remote add github 你复制的SSH地址` → `git remote -v` → `git push github master` | `git remote -v` 显示 `origin`（Gitee）和 `github`（GitHub）两组地址；推送输出 `[new branch] master -> master`；刷新 GitHub 能看到 `readme.txt` 和提交记录 | 把 GitHub 也命名为 `origin`；直接 `git push` 分不清推到哪个平台；以为必须把 `master` 改成 `main` |
+| 35 | 执行 `cd D:\Code` → `git clone 你复制的SSH地址 learngit-github` → 进入目录修改 `readme.txt` → `git add` → `git commit -m "update from github clone"` → `git push` → 回原仓库执行 `git pull github master` | 克隆目录推送成功；原仓库拉取后文件同步更新 | 克隆到已存在且不为空的文件夹；在原仓库直接 `git pull`（默认拉 Gitee）却以为拉的是 GitHub |
